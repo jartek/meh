@@ -1,0 +1,30 @@
+
+-- +goose Up
+-- SQL in section 'Up' is executed when this migration is applied
+ALTER TABLE stadiums
+ADD COLUMN capacity int NOT NULL,
+ADD COLUMN altitude int NOT NULL,
+ADD COLUMN year_built int NOT NULL;
+
+INSERT INTO stadiums VALUES (1, 'Arena De Sao Paulo', 'Sao Paulo', 65807, 792, 2014);
+INSERT INTO stadiums VALUES (2, 'Estadio Mineirao', 'Belo Horizonte', 62547, 800, 1965);
+INSERT INTO stadiums VALUES (3, 'Estadio Castelao', 'Fortaleza', 64846, 0, 1973);
+INSERT INTO stadiums VALUES (4, 'Estadio Do Maracana', 'Rio de Janeiro', 76804, 0, 1950);
+INSERT INTO stadiums VALUES (5, 'Estadio Nacional', 'Brasilia', 68009, 1172, 1974);
+INSERT INTO stadiums VALUES (6, 'Arena Pernambuco', 'Recife', 44248, 0, 2013);
+INSERT INTO stadiums VALUES (7, 'Arena Fonte Nova', 'Salvador', 48747, 0, 1951);
+INSERT INTO stadiums VALUES (8, 'Estadio Pantanal', 'Cuiaba', 42968, 165, 2014);
+INSERT INTO stadiums VALUES (9, 'Estadio Da Baixada', 'Curitiba', 41456, 920, 1914);
+INSERT INTO stadiums VALUES (10, 'Estadio Amazonia', 'Manaus', 42374, 72, 1970);
+INSERT INTO stadiums VALUES (11, 'Estadio Das Dunas', 'Natal', 42086, 45, 2013);
+INSERT INTO stadiums VALUES (12, 'Estadio Beira-Rio', 'Porto Alegre', 48849, 47, 1969);
+
+-- +goose Down
+-- SQL section 'Down' is executed when this migration is rolled back
+
+ALTER TABLE stadiums
+DROP COLUMN capacity,
+DROP COLUMN altitude,
+DROP COLUMN year_built;
+
+DELETE FROM stadiums;
