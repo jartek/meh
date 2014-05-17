@@ -1,11 +1,11 @@
 package models
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"os"
 
-	"github.com/jmoiron/sqlx"
 	_ "github.com/joho/godotenv/autoload"
 	_ "github.com/lib/pq"
 )
@@ -20,9 +20,9 @@ func LoadDBConfig() {
 	DBConfig.User = os.Getenv("DB_USER")
 }
 
-func SetupDB() *sqlx.DB {
+func SetupDB() *sql.DB {
 	LoadDBConfig()
-	db, err := sqlx.Connect("postgres", fmt.Sprintf("user=%s dbname=%s sslmode=%s",
+	db, err := sql.Open("postgres", fmt.Sprintf("user=%s dbname=%s sslmode=%s",
 		DBConfig.User, DBConfig.Name, DBConfig.SslMode))
 	if err != nil {
 		log.Fatalln(err)
