@@ -1,8 +1,7 @@
-package main
+package worldcup
 
 import (
 	"database/sql"
-	"os"
 
 	"github.com/jartek/worldcup/models"
 	"github.com/martini-contrib/render"
@@ -10,15 +9,17 @@ import (
 	"github.com/go-martini/martini"
 )
 
+type Server *martini.ClassicMartini
+
 var m *martini.Martini
 
-func main() {
-	m := martini.Classic()
+func NewServer(db *sql.DB) Server {
+	m := Server(martini.Classic())
 	m.Use(render.Renderer())
-	m.Map(models.SetupDB(os.Getenv("DB_NAME")))
+	m.Map(db)
 	m.Get("/teams", GetAllTeams)
 	m.Get("/teams/:id", GetTeam)
-	m.Run()
+	return m
 }
 
 func GetAllTeams(r render.Render, db *sql.DB) {
