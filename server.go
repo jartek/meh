@@ -16,9 +16,19 @@ func main() {
 	m.Use(render.Renderer())
 	m.Map(models.SetupDB())
 	m.Get("/teams", GetAllTeams)
+	m.Get("/teams/:id", GetTeam)
 	m.Run()
 }
 
 func GetAllTeams(r render.Render, db *sql.DB) {
 	r.JSON(200, models.GetAllTeams(db))
+}
+
+func GetTeam(r render.Render, db *sql.DB, params martini.Params) {
+	team := models.GetTeam(db, params)
+	if team.Id != 0 {
+		r.JSON(200, team)
+	} else {
+		r.JSON(404, nil)
+	}
 }

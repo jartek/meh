@@ -3,6 +3,9 @@ package models
 import (
 	"database/sql"
 	"log"
+	"strconv"
+
+	"github.com/go-martini/martini"
 )
 
 type Team struct {
@@ -28,4 +31,14 @@ func GetAllTeams(db *sql.DB) []Team {
 	}
 
 	return teams
+}
+
+func GetTeam(db *sql.DB, params martini.Params) Team {
+	t := Team{}
+	id, _ := strconv.Atoi(params["id"])
+	err := db.QueryRow("SELECT id, name, nick_name FROM teams WHERE id = $1", id).Scan(&t.Id, &t.Name, &t.NickName)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	return t
 }
