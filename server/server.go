@@ -1,4 +1,4 @@
-package worldcup
+package server
 
 import (
 	"database/sql"
