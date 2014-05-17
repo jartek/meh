@@ -13,10 +13,5 @@ func main() {
 	m := martini.Classic()
 	m.Use(render.Renderer())
 	m.Map(models.SetupDB())
-	m.Get("/", TestIt)
 	m.Run()
-}
-
-func TestIt(r render.Render) {
-	r.JSON(200, map[string]interface{}{"hello": "world"})
 }
