@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"os"
 
 	"github.com/jartek/worldcup/models"
 	"github.com/martini-contrib/render"
@@ -14,7 +15,7 @@ var m *martini.Martini
 func main() {
 	m := martini.Classic()
 	m.Use(render.Renderer())
-	m.Map(models.SetupDB())
+	m.Map(models.SetupDB(os.Getenv("DB_NAME")))
 	m.Get("/teams", GetAllTeams)
 	m.Get("/teams/:id", GetTeam)
 	m.Run()

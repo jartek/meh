@@ -14,14 +14,14 @@ var DBConfig struct {
 	SslMode, Name, User string
 }
 
-func LoadDBConfig() {
+func LoadDBConfig(DbName string) {
+	DBConfig.Name = DbName
 	DBConfig.SslMode = os.Getenv("DB_SSLMODE")
-	DBConfig.Name = os.Getenv("DB_NAME")
 	DBConfig.User = os.Getenv("DB_USER")
 }
 
-func SetupDB() *sql.DB {
-	LoadDBConfig()
+func SetupDB(DbName string) *sql.DB {
+	LoadDBConfig(DbName) //Hacky way of switching dbname, must change it later
 	db, err := sql.Open("postgres", fmt.Sprintf("user=%s dbname=%s sslmode=%s",
 		DBConfig.User, DBConfig.Name, DBConfig.SslMode))
 	if err != nil {
