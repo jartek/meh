@@ -74,6 +74,7 @@ var _ = Describe("Server", func() {
 		It("Should return brazil", func() {
 			server.ServeHTTP(response, request)
 			team := mapFromJSON(response.Body.Bytes())
+			Expect(team["Id"]).To(Equal(float64(1)))
 			Expect(team["Name"]).To(Equal("Brazil"))
 			Expect(team["NickName"]).To(Equal("Canarinho"))
 		})
