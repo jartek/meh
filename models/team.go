@@ -15,7 +15,7 @@ type Team struct {
 }
 
 func GetAllTeams(db *sql.DB) []Team {
-	rows, err := db.Query("SELECT name, nick_name from teams")
+	rows, err := db.Query("SELECT id, name, nick_name from teams")
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -23,7 +23,7 @@ func GetAllTeams(db *sql.DB) []Team {
 	teams := []Team{}
 	for rows.Next() {
 		team := Team{}
-		err := rows.Scan(&team.Name, &team.NickName)
+		err := rows.Scan(&team.Id, &team.Name, &team.NickName)
 		if err != nil {
 			log.Fatalln(err)
 		}
