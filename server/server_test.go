@@ -62,21 +62,34 @@ var _ = Describe("Server", func() {
 	})
 
 	Describe("GET /teams/:id", func() {
-		BeforeEach(func() {
-			request, _ = http.NewRequest("GET", "/teams/1", nil)
-		})
+		Context("Valid ID", func() {
+			BeforeEach(func() {
+				request, _ = http.NewRequest("GET", "/teams/1", nil)
+			})
 
-		It("Should return a status code of 200", func() {
-			server.ServeHTTP(response, request)
-			Expect(response.Code).To(Equal(200))
-		})
+			It("Should return a status code of 200", func() {
+				server.ServeHTTP(response, request)
+				Expect(response.Code).To(Equal(200))
+			})
 
-		It("Should return brazil", func() {
-			server.ServeHTTP(response, request)
-			team := mapFromJSON(response.Body.Bytes())
-			Expect(team["Id"]).To(Equal(float64(1)))
-			Expect(team["Name"]).To(Equal("Brazil"))
-			Expect(team["NickName"]).To(Equal("Canarinho"))
+			It("Should return brazil", func() {
+				server.ServeHTTP(response, request)
+				team := mapFromJSON(response.Body.Bytes())
+				Expect(team["Id"]).To(Equal(float64(1)))
+				Expect(team["Name"]).To(Equal("Brazil"))
+				Expect(team["NickName"]).To(Equal("Canarinho"))
+			})
+
+		})
+		Context("Invalid ID", func() {
+			BeforeEach(func() {
+				request, _ = http.NewRequest("GET", "/teams/11231231", nil)
+			})
+
+			It("Should return a status code of 404", func() {
+				server.ServeHTTP(response, request)
+				Expect(response.Code).To(Equal(404))
+			})
 		})
 	})
 })
