@@ -3,6 +3,7 @@ package server_test
 import (
 	"database/sql"
 	"encoding/json"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -54,10 +55,15 @@ var _ = Describe("Server", func() {
 			server.ServeHTTP(response, request)
 			Expect(response.Code).To(Equal(200))
 		})
-		It("Should return a list of 32 teams", func() {
+		It("Should return a list of all teams", func() {
+			var count int
 			server.ServeHTTP(response, request)
 			teams := sliceFromJSON(response.Body.Bytes())
-			Expect(len(teams)).To(Equal(32))
+			err := db.QueryRow("SELECT COUNT(*) FROM teams").Scan(&count)
+			if err != nil {
+				log.Fatalln(err)
+			}
+			Expect(len(teams)).To(Equal(count))
 		})
 	})
 
@@ -92,4 +98,5 @@ var _ = Describe("Server", func() {
 			})
 		})
 	})
+
 })

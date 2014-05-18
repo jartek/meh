@@ -36,9 +36,12 @@ func GetAllTeams(db *sql.DB) []Team {
 func GetTeam(db *sql.DB, params martini.Params) Team {
 	t := Team{}
 	id, _ := strconv.Atoi(params["id"])
-	err := db.QueryRow("SELECT id, name, nick_name FROM teams WHERE id = $1", id).Scan(&t.Id, &t.Name, &t.NickName)
+	row, err := db.Query("SELECT id, name, nick_name FROM teams WHERE id = $1", id)
 	if err != nil {
 		log.Fatalln(err)
+	}
+	if row.Next() {
+		row.Scan(&t.Id, &t.Name, &t.NickName)
 	}
 	return t
 }
