@@ -1,12 +1,9 @@
 package main
 
-import (
-	"github.com/jartek/worldcup/models"
-	"github.com/jartek/worldcup/server"
-)
+import "github.com/jartek/worldcup/server"
 
 func main() {
-	db := models.SetupDB()
+	db := server.SetupDB()
 	server := server.NewServer(db)
 	server.Run()
 }

@@ -7,8 +7,6 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
-
-	"github.com/jartek/worldcup/models"
 	. "github.com/jartek/worldcup/server"
 	"github.com/martini-contrib/render"
 	. "github.com/onsi/ginkgo"
@@ -35,9 +33,10 @@ var _ = Describe("Server", func() {
 
 	BeforeEach(func() {
 		os.Setenv("DB_NAME", "world_cup_test")
+		os.Setenv("DB_PASSWORD", "test")
 		os.Setenv("DB_USER", "jartek")
 		os.Setenv("DB_SSLMODE", "disable")
-		db = models.SetupDB()
+		db = SetupDB()
 		server = NewServer(db)
 		server.Use(render.Renderer())
 		response = httptest.NewRecorder()
@@ -132,12 +131,11 @@ var _ = Describe("Server", func() {
 				Expect(response.Code).To(Equal(200))
 			})
 
-			It("Should return brazil", func() {
+			It("Should return the first record", func() {
 				server.ServeHTTP(response, request)
-				team := mapFromJSON(response.Body.Bytes())
-				Expect(team["Id"]).To(Equal(float64(1)))
-				Expect(team["Name"]).To(Equal("Brazil"))
-				Expect(team["NickName"]).To(Equal("Canarinho"))
+				stadium := mapFromJSON(response.Body.Bytes())
+				Expect(stadium["Id"]).To(Equal(float64(1)))
+				Expect(stadium["Name"]).To(Equal("Arena De Sao Paulo"))
 			})
 
 		})

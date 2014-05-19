@@ -2,16 +2,42 @@ package server
 
 import (
 	"database/sql"
+	"fmt"
+	"log"
+	"os"
 
 	"github.com/jartek/worldcup/models"
 	"github.com/martini-contrib/render"
 
 	"github.com/go-martini/martini"
+	_ "github.com/joho/godotenv/autoload"
+	_ "github.com/lib/pq"
 )
 
 type Server *martini.ClassicMartini
 
 var m *martini.Martini
+
+var DBConfig struct {
+	SslMode, Name, User, Password string
+}
+
+func LoadDBConfig() {
+	DBConfig.Name = os.Getenv("DB_NAME")
+	DBConfig.SslMode = os.Getenv("DB_SSLMODE")
+	DBConfig.User = os.Getenv("DB_USER")
+	DBConfig.Password = os.Getenv("DB_PASSWORD")
+}
+
+func SetupDB() *sql.DB {
+	LoadDBConfig()
+	db, err := sql.Open("postgres", fmt.Sprintf("user=%s password=%s dbname=%s sslmode=%s",
+		DBConfig.User, DBConfig.Password, DBConfig.Name, DBConfig.SslMode))
+	if err != nil {
+		log.Fatalln(err)
+	}
+	return db
+}
 
 func NewServer(db *sql.DB) Server {
 	m := Server(martini.Classic())
