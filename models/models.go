@@ -61,7 +61,7 @@ func GetAll(db *sql.DB, m interface{}) ([]interface{}, error) {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	query := "SELECT * FROM " + model_name
+	query := fmt.Sprintf("SELECT * FROM %s", model_name)
 	rows, err := db.Query(query)
 	if err != nil {
 		log.Fatalln(err)
