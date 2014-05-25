@@ -8,12 +8,14 @@ import (
 )
 
 type Stadium struct {
-	Id        int
+	Id        int64
 	Name      string
 	Location  string
-	Capacity  int
-	Altitude  int
-	YearBuilt int `db:"year_built"`
+	Capacity  int64
+	Altitude  int64
+	YearBuilt int64 `db:"year_built"`
+	CreatedAt int64 `db:"created_at"`
+	UpdatedAt int64 `db:"updated_at"`
 }
 
 func GetAllStadiums(db *sql.DB) ([]interface{}, error) {

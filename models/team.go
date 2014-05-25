@@ -8,9 +8,11 @@ import (
 )
 
 type Team struct {
-	Id       int
-	Name     string
-	NickName string `db:"nick_name"`
+	Id        int64
+	Name      string
+	NickName  string `db:"nick_name"`
+	CreatedAt int64  `db:"created_at"`
+	UpdatedAt int64  `db:"updated_at"`
 }
 
 func GetAllTeams(db *sql.DB) ([]interface{}, error) {
