@@ -142,7 +142,6 @@ func GetOne(db *sql.DB, m interface{}, id int) (interface{}, error) {
 		if err != nil {
 			log.Fatalln(err)
 		}
-		fmt.Println(unit)
 		return unit, nil
 	}
 	return nil, errors.New("RecordNotFound")
