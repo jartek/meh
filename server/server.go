@@ -51,15 +51,20 @@ func NewServer(db *sql.DB) Server {
 }
 
 func GetAllTeams(r render.Render, db *sql.DB) {
-	r.JSON(200, models.GetAllTeams(db))
+	teams, err := models.GetAllTeams(db)
+	if err != nil {
+		r.JSON(404, nil)
+	} else {
+		r.JSON(200, teams)
+	}
 }
 
 func GetTeam(r render.Render, db *sql.DB, params martini.Params) {
-	team := models.GetTeam(db, params)
-	if team.Id != 0 {
-		r.JSON(200, team)
-	} else {
+	team, err := models.GetTeam(db, params)
+	if err != nil {
 		r.JSON(404, nil)
+	} else {
+		r.JSON(200, team)
 	}
 }
 

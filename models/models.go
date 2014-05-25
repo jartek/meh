@@ -2,6 +2,8 @@ package models
 
 import (
 	"database/sql"
+	"errors"
+	"fmt"
 	"log"
 	"reflect"
 	"strings"
@@ -54,7 +56,7 @@ func PluralizedModelName(m interface{}) (string, error) {
 	return inflector.Pluralize(strings.ToLower(typ.String()[start:end])), nil
 }
 
-func GetAll(db *sql.DB, m interface{}) []interface{} {
+func GetAll(db *sql.DB, m interface{}) ([]interface{}, error) {
 	model_name, err := PluralizedModelName(m)
 	if err != nil {
 		log.Fatalln(err)
@@ -98,5 +100,50 @@ func GetAll(db *sql.DB, m interface{}) []interface{} {
 		collection = append(collection, unit)
 		ctr = ctr + 1
 	}
-	return collection
+	return collection, nil
+}
+
+func GetOne(db *sql.DB, m interface{}, id int) (interface{}, error) {
+	model_name, err := PluralizedModelName(m)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	query := fmt.Sprintf("SELECT * FROM %s WHERE id=%d", model_name, id)
+	rows, err := db.Query(query)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	defer rows.Close()
+	columns, _ := rows.Columns()
+	values := make([]interface{}, len(columns))
+	valuePtrs := make([]interface{}, len(columns))
+
+	typ := reflect.TypeOf(m)
+	if typ.Kind() == reflect.Ptr {
+		typ = typ.Elem()
+	}
+
+	if rows.Next() {
+		for i, _ := range columns {
+			valuePtrs[i] = &values[i]
+		}
+		err := rows.Scan(valuePtrs...)
+		if err != nil {
+			log.Fatalln(err)
+		}
+		for i, _ := range columns {
+			b, err := values[i].([]byte)
+
+			if err {
+				values[i] = string(b)
+			}
+		}
+		unit, err := BuildStruct(m, values)
+		if err != nil {
+			log.Fatalln(err)
+		}
+		fmt.Println(unit)
+		return unit, nil
+	}
+	return nil, errors.New("RecordNotFound")
 }
