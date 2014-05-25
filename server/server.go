@@ -77,14 +77,11 @@ func GetTeam(r render.Render, db *sql.DB, params martini.Params) {
 }
 
 func GetAllStadiums(r render.Render, db *sql.DB) {
-	r.JSON(200, models.GetAllStadiums(db))
+	stadiums, err := models.GetAllStadiums(db)
+	CollectionResponse(r, stadiums, err)
 }
 
 func GetStadium(r render.Render, db *sql.DB, params martini.Params) {
-	team := models.GetStadium(db, params)
-	if team.Id != 0 {
-		r.JSON(200, team)
-	} else {
-		r.JSON(404, nil)
-	}
+	stadium, err := models.GetStadium(db, params)
+	IndividualResponse(r, stadium, err)
 }

@@ -5,7 +5,7 @@ CREATE TABLE matches (
   id SERIAL PRIMARY KEY,
   home_team_id integer REFERENCES teams (id) NOT NULL,
   away_team_id integer REFERENCES teams (id) NOT NULL,
-  stadium_id integer REFERENCES stadiums (id) NOT NULL,
+  stadium_id integer REFERENCES stadia (id) NOT NULL,
   CHECK (home_team_id != away_team_id)
 );
 

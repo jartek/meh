@@ -1,7 +1,7 @@
 
 -- +goose Up
 -- SQL in section 'Up' is executed when this migration is applied
-CREATE TABLE stadiums (
+CREATE TABLE stadia (
   id SERIAL PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
   location VARCHAR(255) NOT NULL
@@ -9,4 +9,4 @@ CREATE TABLE stadiums (
 
 -- +goose Down
 -- SQL section 'Down' is executed when this migration is rolled back
-DROP TABLE stadiums;
+DROP TABLE stadia;
