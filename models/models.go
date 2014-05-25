@@ -2,7 +2,6 @@ package models
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"reflect"
 	"strings"
@@ -55,7 +54,7 @@ func PluralizedModelName(m interface{}) (string, error) {
 	return inflector.Pluralize(strings.ToLower(typ.String()[start:end])), nil
 }
 
-func GetAll(db *sql.DB, m interface{}) interface{} {
+func GetAll(db *sql.DB, m interface{}) []interface{} {
 	model_name, err := PluralizedModelName(m)
 	if err != nil {
 		log.Fatalln(err)
@@ -69,6 +68,8 @@ func GetAll(db *sql.DB, m interface{}) interface{} {
 	columns, _ := rows.Columns()
 	values := make([]interface{}, len(columns))
 	valuePtrs := make([]interface{}, len(columns))
+
+	collection := make([]interface{}, 0)
 
 	typ := reflect.TypeOf(m)
 	if typ.Kind() == reflect.Ptr {
@@ -90,13 +91,12 @@ func GetAll(db *sql.DB, m interface{}) interface{} {
 				values[i] = string(b)
 			}
 		}
-		a, err := BuildStruct(m, values)
+		unit, err := BuildStruct(m, values)
 		if err != nil {
 			log.Fatalln(err)
 		}
-		fmt.Println(a)
-		// collection = append(collection, unit)
+		collection = append(collection, unit)
 		ctr = ctr + 1
 	}
-	return query
+	return collection
 }
