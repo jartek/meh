@@ -50,22 +50,30 @@ func NewServer(db *sql.DB) Server {
 	return m
 }
 
-func GetAllTeams(r render.Render, db *sql.DB) {
-	teams, err := models.GetAllTeams(db)
+func CollectionResponse(r render.Render, collection []interface{}, err error) {
 	if err != nil {
 		r.JSON(404, nil)
 	} else {
-		r.JSON(200, teams)
+		r.JSON(200, collection)
 	}
+}
+
+func IndividualResponse(r render.Render, collection interface{}, err error) {
+	if err != nil {
+		r.JSON(404, nil)
+	} else {
+		r.JSON(200, collection)
+	}
+}
+
+func GetAllTeams(r render.Render, db *sql.DB) {
+	teams, err := models.GetAllTeams(db)
+	CollectionResponse(r, teams, err)
 }
 
 func GetTeam(r render.Render, db *sql.DB, params martini.Params) {
 	team, err := models.GetTeam(db, params)
-	if err != nil {
-		r.JSON(404, nil)
-	} else {
-		r.JSON(200, team)
-	}
+	IndividualResponse(r, team, err)
 }
 
 func GetAllStadiums(r render.Render, db *sql.DB) {
