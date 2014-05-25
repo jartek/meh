@@ -1,6 +1,7 @@
 package models_test
 
 import (
+	"reflect"
 	. "github.com/jartek/worldcup/models"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -17,9 +18,12 @@ var _ = Describe("Models", func() {
 
 	Describe("#Attributes", func() {
 		It("Should return a list of attributes", func() {
-			attrs, err := Attributes(Team{})
-			Expect(err).ShouldNot(HaveOccurred())
-			// Finish this
+			type Temp struct {
+				attr int
+			}
+			attrs := make(map[string]reflect.Type)
+			attrs["attr"] = reflect.ValueOf(&Temp{}).Elem().Field(0).Type()
+			Expect(Attributes(Temp{})).To(Equal(attrs))
 		})
 	})
 })
