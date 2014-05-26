@@ -1,5 +1,12 @@
 package models
 
+import (
+	"database/sql"
+	"strconv"
+
+	"github.com/go-martini/martini"
+)
+
 // TYPES
 // 1 - Group
 // 2 - Knockout
@@ -17,4 +24,13 @@ type Match struct {
 	CreatedAt     int64 `db:"created_at"`
 	UpdatedAt     int64 `db:"updated_at"`
 	CompetitionId int64 `db:"competition_id"`
+}
+
+func GetAllMatches(db *sql.DB) ([]interface{}, error) {
+	return GetAll(db, &Match{})
+}
+
+func GetMatch(db *sql.DB, params martini.Params) (interface{}, error) {
+	id, _ := strconv.Atoi(params["id"])
+	return GetOne(db, &Match{}, id)
 }

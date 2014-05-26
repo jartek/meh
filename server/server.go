@@ -47,6 +47,8 @@ func NewServer(db *sql.DB) Server {
 	m.Get("/teams/:id", GetTeam)
 	m.Get("/stadiums", GetAllStadiums)
 	m.Get("/stadiums/:id", GetStadium)
+	m.Get("/matches", GetAllMatches)
+	m.Get("/matches/:id", GetMatch)
 	return m
 }
 
@@ -84,4 +86,14 @@ func GetAllStadiums(r render.Render, db *sql.DB) {
 func GetStadium(r render.Render, db *sql.DB, params martini.Params) {
 	stadium, err := models.GetStadium(db, params)
 	IndividualResponse(r, stadium, err)
+}
+
+func GetAllMatches(r render.Render, db *sql.DB) {
+	matches, err := models.GetAllMatches(db)
+	CollectionResponse(r, matches, err)
+}
+
+func GetMatch(r render.Render, db *sql.DB, params martini.Params) {
+	match, err := models.GetMatch(db, params)
+	IndividualResponse(r, match, err)
 }

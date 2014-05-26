@@ -39,7 +39,9 @@ func BuildStruct(m interface{}, values []interface{}) (interface{}, error) {
 	for k, v := range attrs {
 		field := obj.Elem().FieldByName(k)
 		if v.Kind() == reflect.Int64 {
-			if reflect.TypeOf(values[ctr]) == reflect.TypeOf(time.Now()) {
+			if reflect.TypeOf(values[ctr]) == reflect.TypeOf(nil) {
+				field.SetInt(-1)
+			} else if reflect.TypeOf(values[ctr]) == reflect.TypeOf(time.Now()) {
 				field.SetInt(values[ctr].(time.Time).Unix())
 			} else {
 				field.SetInt(values[ctr].(int64))
