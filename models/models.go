@@ -7,6 +7,7 @@ import (
 	"log"
 	"reflect"
 	"strings"
+	"time"
 
 	"github.com/gedex/inflector"
 )
@@ -37,8 +38,12 @@ func BuildStruct(m interface{}, values []interface{}) (interface{}, error) {
 	ctr := 0
 	for k, v := range attrs {
 		field := obj.Elem().FieldByName(k)
-		if v.Kind() == reflect.Int {
-			field.SetInt(values[ctr].(int64))
+		if v.Kind() == reflect.Int64 {
+			if reflect.TypeOf(values[ctr]) == reflect.TypeOf(time.Now()) {
+				field.SetInt(values[ctr].(time.Time).Unix())
+			} else {
+				field.SetInt(values[ctr].(int64))
+			}
 		} else if v.Kind() == reflect.String {
 			field.SetString(values[ctr].(string))
 		} else if v.Kind() == reflect.Bool {
