@@ -1,5 +1,10 @@
 package models
 
+// TYPES
+// 1 - Group
+// 2 - Knockout
+// 3 - League
+
 type Match struct {
 	Id            int64
 	HomeTeamId    int64 `db:"home_team_id"`
