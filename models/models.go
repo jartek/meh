@@ -36,14 +36,14 @@ func BuildStruct(m interface{}, values []interface{}) (interface{}, error) {
 	obj := reflect.New(typ)
 	attrs := Attributes(m)
 	ctr := 0
-	for k, v := range attrs {
-		field := obj.Elem().FieldByName(k)
+	for _, v := range attrs {
+		field := obj.Elem().Field(ctr)
 		if v.Kind() == reflect.Int64 {
 			if reflect.TypeOf(values[ctr]) == reflect.TypeOf(nil) {
 				field.SetInt(-1)
 			} else if reflect.TypeOf(values[ctr]) == reflect.TypeOf(time.Now()) {
 				field.SetInt(values[ctr].(time.Time).Unix())
-			} else {
+			} else if reflect.TypeOf(values[ctr]).Kind() == reflect.Int64 {
 				field.SetInt(values[ctr].(int64))
 			}
 		} else if v.Kind() == reflect.String {
