@@ -24,5 +24,4 @@ _testmain.go
 
 .env
 gin-bin
-db/dbconf.yml
 db
